@@ -8,10 +8,10 @@
       "source": [
         "# my introdoction\n",
         "\n",
-        "### Nama : Dicky Saputra\n",
-        "### NIm  : 230411100172\n",
-        "### Prodi: Teknik Informatika\n",
-        "### email: saputradikidiki12@gmail.com"
+        "Nama : Dicky Saputra\n",
+        "NIm  : 230411100172\n",
+        "Prodi: Teknik Informatika\n",
+        "email: saputradikidiki12@gmail.com"
       ]
     }
   ],
