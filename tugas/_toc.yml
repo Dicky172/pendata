@@ -1,0 +1,13 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: tugas1_aljabar_linear
+chapters:
+- file: tugas2_matriks
+- file: Tugas3
+- file: Tugas4
+- file: Tugas5
+- file: Tugas6
+- file: Tugas7
+
