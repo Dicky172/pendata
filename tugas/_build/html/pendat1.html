@@ -644,8 +644,11 @@ Dengan memahami tipe data, Anda dapat lebih efektif dalam melakukan Data Profili
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">pyod.models.knn</span> <span class="kn">import</span> <span class="n">KNN</span>
+<span class="kn">from</span> <span class="nn">pyod.models.iforest</span> <span class="kn">import</span> <span class="n">IForest</span>  <span class="c1"># Isolation Forest</span>
+<span class="kn">from</span> <span class="nn">pyod.models.lof</span> <span class="kn">import</span> <span class="n">LOF</span>  <span class="c1"># Local Outlier Factor</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
 </pre></div>
 </div>
@@ -661,7 +664,7 @@ Requirement already satisfied: pandas in /home/codespace/.local/lib/python3.12/s
 Requirement already satisfied: typing-extensions&gt;=4.6.0 in /home/codespace/.local/lib/python3.12/site-packages (from sqlalchemy) (4.12.2)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: numpy&gt;=1.26.0 in /home/codespace/.local/lib/python3.12/site-packages (from pandas) (2.2.0)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: numpy&gt;=1.26.0 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from pandas) (2.1.3)
 Requirement already satisfied: python-dateutil&gt;=2.8.2 in /home/codespace/.local/lib/python3.12/site-packages (from pandas) (2.9.0.post0)
 Requirement already satisfied: pytz&gt;=2020.1 in /home/codespace/.local/lib/python3.12/site-packages (from pandas) (2024.2)
 Requirement already satisfied: tzdata&gt;=2022.7 in /home/codespace/.local/lib/python3.12/site-packages (from pandas) (2024.2)
@@ -674,36 +677,14 @@ Requirement already satisfied: tzdata&gt;=2022.7 in /home/codespace/.local/lib/p
 <span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pyod
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading pyod-2.0.3.tar.gz (169 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Preparing metadata (setup.py) ... ?25l-
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> \
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> done
-?25hRequirement already satisfied: joblib in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (1.4.2)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pyod in /usr/local/python/3.12.1/lib/python3.12/site-packages (2.0.3)
+Requirement already satisfied: joblib in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (1.4.2)
 Requirement already satisfied: matplotlib in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (3.9.3)
-Requirement already satisfied: numpy&gt;=1.19 in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (2.2.0)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting numba&gt;=0.51 (from pyod)
-  Downloading numba-0.61.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.8 kB)
+Requirement already satisfied: numpy&gt;=1.19 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from pyod) (2.1.3)
+Requirement already satisfied: numba&gt;=0.51 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from pyod) (0.61.0)
 Requirement already satisfied: scipy&gt;=1.5.1 in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (1.14.1)
 Requirement already satisfied: scikit-learn&gt;=0.22.0 in /home/codespace/.local/lib/python3.12/site-packages (from pyod) (1.6.0)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting llvmlite&lt;0.45,&gt;=0.44.0dev0 (from numba&gt;=0.51-&gt;pyod)
-  Downloading llvmlite-0.44.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.0 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting numpy&gt;=1.19 (from pyod)
-  Downloading numpy-2.1.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)
+Requirement already satisfied: llvmlite&lt;0.45,&gt;=0.44.0dev0 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from numba&gt;=0.51-&gt;pyod) (0.44.0)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: threadpoolctl&gt;=3.1.0 in /home/codespace/.local/lib/python3.12/site-packages (from scikit-learn&gt;=0.22.0-&gt;pyod) (3.5.0)
@@ -711,234 +692,17 @@ Requirement already satisfied: contourpy&gt;=1.0.1 in /home/codespace/.local/lib
 Requirement already satisfied: cycler&gt;=0.10 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (0.12.1)
 Requirement already satisfied: fonttools&gt;=4.22.0 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (4.55.3)
 Requirement already satisfied: kiwisolver&gt;=1.3.1 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (1.4.7)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: packaging&gt;=20.0 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (24.2)
+Requirement already satisfied: packaging&gt;=20.0 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (24.2)
 Requirement already satisfied: pillow&gt;=8 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (11.0.0)
 Requirement already satisfied: pyparsing&gt;=2.3.1 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (3.2.0)
 Requirement already satisfied: python-dateutil&gt;=2.7 in /home/codespace/.local/lib/python3.12/site-packages (from matplotlib-&gt;pyod) (2.9.0.post0)
-Requirement already satisfied: six&gt;=1.5 in /home/codespace/.local/lib/python3.12/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib-&gt;pyod) (1.17.0)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading numba-0.61.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.9 MB)
-?25l   <span class=" -Color -Color-C237">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">0.0/3.9 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   <span class=" -Color -Color-Red">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">3.9/3.9 MB</span> <span class=" -Color -Color-Red">35.9 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25hDownloading numpy-2.1.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.0 MB)
-?25l   <span class=" -Color -Color-C237">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">0.0/16.0 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">16.0/16.0 MB</span> <span class=" -Color -Color-Red">155.4 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">16.0/16.0 MB</span> <span class=" -Color -Color-Red">155.4 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-   <span class=" -Color -Color-Red">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">16.0/16.0 MB</span> <span class=" -Color -Color-Red">37.1 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25hDownloading llvmlite-0.44.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (42.4 MB)
-?25l   <span class=" -Color -Color-C237">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">0.0/42.4 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━<span class=" -Color -Color-C237">╺━━━━━━━━━━━</span> <span class=" -Color -Color-Green">30.1/42.4 MB</span> <span class=" -Color -Color-Red">150.8 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">42.2/42.4 MB</span> <span class=" -Color -Color-Red">145.6 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">42.2/42.4 MB</span> <span class=" -Color -Color-Red">145.6 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">42.2/42.4 MB</span> <span class=" -Color -Color-Red">145.6 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ <span class=" -Color -Color-Green">42.2/42.4 MB</span> <span class=" -Color -Color-Red">145.6 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   <span class=" -Color -Color-Red">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">42.4/42.4 MB</span> <span class=" -Color -Color-Red">38.9 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25h
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Building wheels for collected packages: pyod
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Building wheel for pyod (setup.py) ... ?25l-
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> \
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> |
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> /
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> -
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> \
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> done
-?25h  Created wheel for pyod: filename=pyod-2.0.3-py3-none-any.whl size=200466 sha256=5c002cf43a1ff6fac28e800b7f11389d185e766ac014e0d3b3e72a8fbeab1fe2
-  Stored in directory: /home/codespace/.cache/pip/wheels/16/7c/ed/ebc8a4a1a530f7e955ed494a8c2085079f0ef34e3bc0735c97
-Successfully built pyod
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: numpy, llvmlite, numba, pyod
-  Attempting uninstall: numpy
-    Found existing installation: numpy 2.2.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Uninstalling numpy-2.2.0:
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      Successfully uninstalled numpy-2.2.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed llvmlite-0.44.0 numba-0.61.0 numpy-2.1.3 pyod-2.0.3
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: six&gt;=1.5 in /home/codespace/.local/lib/python3.12/site-packages (from python-dateutil&gt;=2.7-&gt;matplotlib-&gt;pyod) (1.17.0)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
 <span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;pip install pymysql psycopg2 sqlalchemy pandas&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;pip install pyod&#39;</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="n">File</span> <span class="o">~/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.12</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">pandas</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">49</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="c1"># let init-time option registration happen</span>
-<span class="g g-Whitespace">     </span><span class="mi">47</span> <span class="kn">import</span> <span class="nn">pandas.core.config_init</span>  <span class="c1"># pyright: ignore[reportUnusedImport] # noqa: F401</span>
-<span class="ne">---&gt; </span><span class="mi">49</span> <span class="kn">from</span> <span class="nn">pandas.core.api</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="c1"># dtype</span>
-<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="n">ArrowDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">52</span>     <span class="n">Int8Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">Int16Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="n">Int32Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span>     <span class="n">Int64Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span>     <span class="n">UInt8Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="n">UInt16Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>     <span class="n">UInt32Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span>     <span class="n">UInt64Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>     <span class="n">Float32Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="n">Float64Dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span>     <span class="n">CategoricalDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span>     <span class="n">PeriodDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span>     <span class="n">IntervalDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">DatetimeTZDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">66</span>     <span class="n">StringDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span>     <span class="n">BooleanDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">68</span>     <span class="c1"># missing</span>
-<span class="g g-Whitespace">     </span><span class="mi">69</span>     <span class="n">NA</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">70</span>     <span class="n">isna</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">71</span>     <span class="n">isnull</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">72</span>     <span class="n">notna</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">73</span>     <span class="n">notnull</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span>     <span class="c1"># indexes</span>
-<span class="g g-Whitespace">     </span><span class="mi">75</span>     <span class="n">Index</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">76</span>     <span class="n">CategoricalIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span>     <span class="n">RangeIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="n">MultiIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span>     <span class="n">IntervalIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="n">TimedeltaIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="n">DatetimeIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">82</span>     <span class="n">PeriodIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="n">IndexSlice</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>     <span class="c1"># tseries</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="n">NaT</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">86</span>     <span class="n">Period</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">87</span>     <span class="n">period_range</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">88</span>     <span class="n">Timedelta</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">89</span>     <span class="n">timedelta_range</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span>     <span class="n">Timestamp</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">91</span>     <span class="n">date_range</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">92</span>     <span class="n">bdate_range</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">93</span>     <span class="n">Interval</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">94</span>     <span class="n">interval_range</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">95</span>     <span class="n">DateOffset</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span>     <span class="c1"># conversion</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="n">to_numeric</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">98</span>     <span class="n">to_datetime</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">99</span>     <span class="n">to_timedelta</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="c1"># misc</span>
-<span class="g g-Whitespace">    </span><span class="mi">101</span>     <span class="n">Flags</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">102</span>     <span class="n">Grouper</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">103</span>     <span class="n">factorize</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">104</span>     <span class="n">unique</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">105</span>     <span class="n">value_counts</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">106</span>     <span class="n">NamedAgg</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">107</span>     <span class="n">array</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">108</span>     <span class="n">Categorical</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span>     <span class="n">set_eng_float_format</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">110</span>     <span class="n">Series</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">111</span>     <span class="n">DataFrame</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">112</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">114</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.dtypes</span> <span class="kn">import</span> <span class="n">SparseDtype</span>
-<span class="g g-Whitespace">    </span><span class="mi">116</span> <span class="kn">from</span> <span class="nn">pandas.tseries.api</span> <span class="kn">import</span> <span class="n">infer_freq</span>
-
-<span class="n">File</span> <span class="o">~/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.12</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">pandas</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">api</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">9</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">pandas._libs</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">NaT</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">Period</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">Timedelta</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">Timestamp</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">pandas._libs.missing</span> <span class="kn">import</span> <span class="n">NA</span>
-<span class="ne">----&gt; </span><span class="mi">9</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.dtypes</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="n">ArrowDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span>     <span class="n">CategoricalDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span>     <span class="n">DatetimeTZDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span>     <span class="n">IntervalDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="n">PeriodDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.missing</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="n">isna</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span>     <span class="n">isnull</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="n">notna</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span>     <span class="n">notnull</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="kn">from</span> <span class="nn">pandas.core.algorithms</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="n">factorize</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span>     <span class="n">unique</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="n">value_counts</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="p">)</span>
-
-<span class="n">File</span> <span class="o">~/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.12</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">pandas</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">dtypes</span><span class="o">/</span><span class="n">dtypes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">60</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.base</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="n">ExtensionDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">52</span>     <span class="n">StorageExtensionDtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">register_extension_dtype</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.generic</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span>     <span class="n">ABCCategoricalIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="n">ABCIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>     <span class="n">ABCRangeIndex</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">60</span> <span class="kn">from</span> <span class="nn">pandas.core.dtypes.inference</span> <span class="kn">import</span> <span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="n">is_bool</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span>     <span class="n">is_list_like</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span> <span class="kn">from</span> <span class="nn">pandas.util</span> <span class="kn">import</span> <span class="n">capitalize_first_letter</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pa_version_under10p1</span><span class="p">:</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1360,</span> in <span class="ni">_find_and_load</span><span class="nt">(name, import_)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1331,</span> in <span class="ni">_find_and_load_unlocked</span><span class="nt">(name, import_)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap&gt;:935,</span> in <span class="ni">_load_unlocked</span><span class="nt">(spec)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap_external&gt;:990,</span> in <span class="ni">exec_module</span><span class="nt">(self, module)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap_external&gt;:1086,</span> in <span class="ni">get_code</span><span class="nt">(self, fullname)</span>
-
-<span class="nn">File &lt;frozen importlib._bootstrap_external&gt;:1186,</span> in <span class="ni">get_data</span><span class="nt">(self, path)</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -973,7 +737,7 @@ Successfully built pyod
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-0ecd23b2-e93f-49ac-8d5d-fcce55f908d4" class="colab-df-container">
+  <div id="df-a95a20f6-4d56-47fe-ab4e-23dae30c00f4" class="colab-df-container">
     <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1040,7 +804,7 @@ Successfully built pyod
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-0ecd23b2-e93f-49ac-8d5d-fcce55f908d4')"
+    <button class="colab-df-convert" onclick="convertToInteractive('df-a95a20f6-4d56-47fe-ab4e-23dae30c00f4')"
             title="Convert this dataframe to an interactive table."
             style="display:none;">
 
@@ -1092,12 +856,12 @@ Successfully built pyod
 
     <script>
       const buttonEl =
-        document.querySelector('#df-0ecd23b2-e93f-49ac-8d5d-fcce55f908d4 button.colab-df-convert');
+        document.querySelector('#df-a95a20f6-4d56-47fe-ab4e-23dae30c00f4 button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-0ecd23b2-e93f-49ac-8d5d-fcce55f908d4');
+        const element = document.querySelector('#df-a95a20f6-4d56-47fe-ab4e-23dae30c00f4');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -1117,8 +881,8 @@ Successfully built pyod
   </div>
 
 
-<div id="df-c8a46994-b72d-4a76-b12d-dc5c5c6bfb7d">
-  <button class="colab-df-quickchart" onclick="quickchart('df-c8a46994-b72d-4a76-b12d-dc5c5c6bfb7d')"
+<div id="df-3443298b-8cf6-4570-9820-2149f065e788">
+  <button class="colab-df-quickchart" onclick="quickchart('df-3443298b-8cf6-4570-9820-2149f065e788')"
             title="Suggest charts"
             style="display:none;">
 
@@ -1237,7 +1001,7 @@ Successfully built pyod
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-c8a46994-b72d-4a76-b12d-dc5c5c6bfb7d button');
+        document.querySelector('#df-3443298b-8cf6-4570-9820-2149f065e788 button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
@@ -1259,7 +1023,7 @@ Successfully built pyod
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-7e3229e7-70f7-43af-9096-a788ad838b76" class="colab-df-container">
+  <div id="df-432f46d6-bd15-492f-9746-df6446f85266" class="colab-df-container">
     <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1326,7 +1090,7 @@ Successfully built pyod
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-7e3229e7-70f7-43af-9096-a788ad838b76')"
+    <button class="colab-df-convert" onclick="convertToInteractive('df-432f46d6-bd15-492f-9746-df6446f85266')"
             title="Convert this dataframe to an interactive table."
             style="display:none;">
 
@@ -1378,12 +1142,12 @@ Successfully built pyod
 
     <script>
       const buttonEl =
-        document.querySelector('#df-7e3229e7-70f7-43af-9096-a788ad838b76 button.colab-df-convert');
+        document.querySelector('#df-432f46d6-bd15-492f-9746-df6446f85266 button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-7e3229e7-70f7-43af-9096-a788ad838b76');
+        const element = document.querySelector('#df-432f46d6-bd15-492f-9746-df6446f85266');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -1403,8 +1167,8 @@ Successfully built pyod
   </div>
 
 
-<div id="df-17683d7b-2a86-47ca-a087-4c2f8e9014bc">
-  <button class="colab-df-quickchart" onclick="quickchart('df-17683d7b-2a86-47ca-a087-4c2f8e9014bc')"
+<div id="df-7793a237-b0ea-4a4f-b4be-bafde9ca081c">
+  <button class="colab-df-quickchart" onclick="quickchart('df-7793a237-b0ea-4a4f-b4be-bafde9ca081c')"
             title="Suggest charts"
             style="display:none;">
 
@@ -1523,7 +1287,7 @@ Successfully built pyod
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-17683d7b-2a86-47ca-a087-4c2f8e9014bc button');
+        document.querySelector('#df-7793a237-b0ea-4a4f-b4be-bafde9ca081c button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
@@ -1555,7 +1319,7 @@ Successfully built pyod
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-e4c6d714-1236-40b6-81fd-d88b1e946268" class="colab-df-container">
+  <div id="df-d27fbeea-ff36-4a0d-9b47-45a3ca0d85a8" class="colab-df-container">
     <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1689,7 +1453,7 @@ Successfully built pyod
     <div class="colab-df-buttons">
 
   <div class="colab-df-container">
-    <button class="colab-df-convert" onclick="convertToInteractive('df-e4c6d714-1236-40b6-81fd-d88b1e946268')"
+    <button class="colab-df-convert" onclick="convertToInteractive('df-d27fbeea-ff36-4a0d-9b47-45a3ca0d85a8')"
             title="Convert this dataframe to an interactive table."
             style="display:none;">
 
@@ -1741,12 +1505,12 @@ Successfully built pyod
 
     <script>
       const buttonEl =
-        document.querySelector('#df-e4c6d714-1236-40b6-81fd-d88b1e946268 button.colab-df-convert');
+        document.querySelector('#df-d27fbeea-ff36-4a0d-9b47-45a3ca0d85a8 button.colab-df-convert');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
       async function convertToInteractive(key) {
-        const element = document.querySelector('#df-e4c6d714-1236-40b6-81fd-d88b1e946268');
+        const element = document.querySelector('#df-d27fbeea-ff36-4a0d-9b47-45a3ca0d85a8');
         const dataTable =
           await google.colab.kernel.invokeFunction('convertToInteractive',
                                                     [key], {});
@@ -1766,8 +1530,8 @@ Successfully built pyod
   </div>
 
 
-<div id="df-e765b19f-6ac0-49db-a076-564cf7138359">
-  <button class="colab-df-quickchart" onclick="quickchart('df-e765b19f-6ac0-49db-a076-564cf7138359')"
+<div id="df-0fc5f6f3-5cf7-469e-a58a-4eb504787e43">
+  <button class="colab-df-quickchart" onclick="quickchart('df-0fc5f6f3-5cf7-469e-a58a-4eb504787e43')"
             title="Suggest charts"
             style="display:none;">
 
@@ -1886,14 +1650,14 @@ Successfully built pyod
     }
     (() => {
       let quickchartButtonEl =
-        document.querySelector('#df-e765b19f-6ac0-49db-a076-564cf7138359 button');
+        document.querySelector('#df-0fc5f6f3-5cf7-469e-a58a-4eb504787e43 button');
       quickchartButtonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
     })();
   </script>
 </div>
 
-  <div id="id_5c1848d4-da4e-41e7-bfeb-ec63f4139080">
+  <div id="id_d6388783-7b6c-46f7-a3f2-583da8e75e8c">
     <style>
       .colab-df-generate {
         background-color: #E8F0FE;
@@ -1937,7 +1701,7 @@ Successfully built pyod
     <script>
       (() => {
       const buttonEl =
-        document.querySelector('#id_5c1848d4-da4e-41e7-bfeb-ec63f4139080 button.colab-df-generate');
+        document.querySelector('#id_d6388783-7b6c-46f7-a3f2-583da8e75e8c button.colab-df-generate');
       buttonEl.style.display =
         google.colab.kernel.accessAllowed ? 'block' : 'none';
 
@@ -2121,9 +1885,13 @@ Mengevaluasi dampaknya.</p>
     <span class="nb">print</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 
     <span class="c1"># Visualisasi distribusi data sebelum normalisasi</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_numeric</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribusi Data </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> Sebelum Normalisasi&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribusi Data </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> Sebelum Normalisasi&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fitur&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Nilai&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
     <span class="c1"># Normalisasi data</span>
@@ -2147,10 +1915,19 @@ Mengevaluasi dampaknya.</p>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">labels_</span>
 
     <span class="c1"># Visualisasi hasil deteksi outlier</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deteksi Outlier dengan </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">scatter</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># Anotasi untuk outlier</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">df_numeric</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Judul dan label</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">df_numeric</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deteksi Outlier dengan </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">scatter</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier (1) / Non-Outlier (0)&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
     <span class="c1"># Menampilkan jumlah outlier</span>
@@ -2179,8 +1956,8 @@ petal width     0
 dtype: int64
 </pre></div>
 </div>
-<img alt="_images/f6f50737eec75a58772a9e4a62511905943ae6cc23ff02dc4f4a63e5add7f862.png" src="_images/f6f50737eec75a58772a9e4a62511905943ae6cc23ff02dc4f4a63e5add7f862.png" />
-<img alt="_images/865f177d9d65964d6e5a5e56cc192e67ae5919984973578dfa6bbdffb041c013.png" src="_images/865f177d9d65964d6e5a5e56cc192e67ae5919984973578dfa6bbdffb041c013.png" />
+<img alt="_images/f25b10ae1691396d669d1c87f9331ca0585eb9c4f6238a27991bedd3d93d7c56.png" src="_images/f25b10ae1691396d669d1c87f9331ca0585eb9c4f6238a27991bedd3d93d7c56.png" />
+<img alt="_images/f067942ae7b5ffe747cbadbe48a61f7ca774a587c2e7f58f8511572408d5e108.png" src="_images/f067942ae7b5ffe747cbadbe48a61f7ca774a587c2e7f58f8511572408d5e108.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah outlier yang terdeteksi dari MySQL: 2
       id           class  petal length  petal width  outlier
 0      1     Iris-setosa          86.4         70.0        1
@@ -2197,8 +1974,8 @@ sepal width     0
 dtype: int64
 </pre></div>
 </div>
-<img alt="_images/08de646b05e8f81a3c2cf87bcd92d16ae4f081ae3042bdf7b20eb8b8c81dc8bb.png" src="_images/08de646b05e8f81a3c2cf87bcd92d16ae4f081ae3042bdf7b20eb8b8c81dc8bb.png" />
-<img alt="_images/a2f5c93048ebe2a53ad9321b8ff9bc2c785a8854cf4b965631b42af55a83ea27.png" src="_images/a2f5c93048ebe2a53ad9321b8ff9bc2c785a8854cf4b965631b42af55a83ea27.png" />
+<img alt="_images/a64c0ec173971d70df198a2a91552e6ae9ecc4f2bb19dec31401514e166029c6.png" src="_images/a64c0ec173971d70df198a2a91552e6ae9ecc4f2bb19dec31401514e166029c6.png" />
+<img alt="_images/dd3d0ed400f55786ad2013e2e54ab83d7338ba1b8138248e2a28dbf96e4ca01e.png" src="_images/dd3d0ed400f55786ad2013e2e54ab83d7338ba1b8138248e2a28dbf96e4ca01e.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah outlier yang terdeteksi dari PostgreSQL: 2
       id           class  sepal length  sepal width  outlier
 129  132  Iris-virginica           7.9          3.8        1
