@@ -6,3 +6,4 @@ root: intro
 chapters:
 - file: myintro
 - file: pendat1
+- file: LOF
