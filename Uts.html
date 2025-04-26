@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>analisa &#8212; My sample book</title>
+    <title>🔍 Tahap 1: Pemahaman Data (Data Understanding) &#8212; My sample book</title>
   
   
   
@@ -173,7 +173,8 @@
 <li class="toctree-l1"><a class="reference internal" href="LOF.html">LOF (Local Outlier Factor)</a></li>
 
 <li class="toctree-l1"><a class="reference internal" href="naive_byass.html">Naive Baiyes</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">analisa</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">🔍 Tahap 1: Pemahaman Data (Data Understanding)</a></li>
+
 
 
 
@@ -361,7 +362,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>analisa</h1>
+    <h1>🔍 Tahap 1: Pemahaman Data (Data Understanding)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -371,12 +372,23 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">analisa</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">preprocessing</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan">pemodelan</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi">evaluasi</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">🔍 Tahap 1: Pemahaman Data (Data Understanding)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-preprocessing-data">🛠️ Tahap 2: Preprocessing Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-lanjutan-preprocessing-data-menangani-missing-value-dan-encoding">🛠️ Tahap 2 Lanjutan: Preprocessing Data (Menangani Missing Value dan Encoding)</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-pemodelan-modeling">🤖 Tahap 3: Pemodelan (Modeling)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-evaluasi-model">📈 Tahap 4: Evaluasi Model</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-10-fitur-paling-penting">Plot 10 fitur paling penting</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">kesimpulan</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-akhir">🏁 Kesimpulan Akhir</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemahaman-data-data-understanding">✨ 1. Pemahaman Data (Data Understanding)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemrosesan-awal-preprocessing">🛠️ 2. Pemrosesan Awal (Preprocessing)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-modeling">🤖 3. Pemodelan (Modeling)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model">📈 4. Evaluasi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir">🎯 Hasil Akhir</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#penutup">📚 Penutup</a></li>
 </ul>
 
             </nav>
@@ -812,15 +824,16 @@
   </div>
 </div></div>
 </div>
-<section id="analisa">
-<h1>analisa<a class="headerlink" href="#analisa" title="Link to this heading">#</a></h1>
+<section id="tahap-1-pemahaman-data-data-understanding">
+<h1>🔍 Tahap 1: Pemahaman Data (Data Understanding)<a class="headerlink" href="#tahap-1-pemahaman-data-data-understanding" title="Link to this heading">#</a></h1>
+<p>Sebelum memulai preprocessing dan pemodelan, penting untuk memahami struktur dan kondisi awal data. Berikut langkah-langkah analisa awal yang dilakukan:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cek dimensi &amp; info awal</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># memahami struktur dataset</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 
-<span class="c1"># Cek jumlah missing value</span>
+<span class="c1"># cek jumlah missing value</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -880,8 +893,9 @@ dtype: int64
 </div>
 </div>
 </section>
-<section id="preprocessing">
-<h1>preprocessing<a class="headerlink" href="#preprocessing" title="Link to this heading">#</a></h1>
+<section id="tahap-2-preprocessing-data">
+<h1>🛠️ Tahap 2: Preprocessing Data<a class="headerlink" href="#tahap-2-preprocessing-data" title="Link to this heading">#</a></h1>
+<p>Setelah memahami struktur awal data, langkah selanjutnya adalah melakukan preprocessing, yaitu pembersihan dan persiapan data agar siap digunakan dalam pemodelan.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;ID&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
@@ -947,6 +961,9 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
+<section id="tahap-2-lanjutan-preprocessing-data-menangani-missing-value-dan-encoding">
+<h2>🛠️ Tahap 2 Lanjutan: Preprocessing Data (Menangani Missing Value dan Encoding)<a class="headerlink" href="#tahap-2-lanjutan-preprocessing-data-menangani-missing-value-dan-encoding" title="Link to this heading">#</a></h2>
+<p>Setelah menghapus kolom yang tidak diperlukan dan mengidentifikasi fitur kategorikal, langkah berikutnya adalah membersihkan dan menyiapkan data lebih lanjut agar siap digunakan untuk pemodelan.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
@@ -971,8 +988,10 @@ Name: count, dtype: int64
 </div>
 </div>
 </section>
-<section id="pemodelan">
-<h1>pemodelan<a class="headerlink" href="#pemodelan" title="Link to this heading">#</a></h1>
+</section>
+<section id="tahap-3-pemodelan-modeling">
+<h1>🤖 Tahap 3: Pemodelan (Modeling)<a class="headerlink" href="#tahap-3-pemodelan-modeling" title="Link to this heading">#</a></h1>
+<p>Setelah data siap digunakan, langkah selanjutnya adalah membuat model klasifikasi untuk memprediksi status kelangsungan hidup pasien sirosis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
@@ -1006,8 +1025,9 @@ Name: count, dtype: int64
 </div>
 </div>
 </section>
-<section id="evaluasi">
-<h1>evaluasi<a class="headerlink" href="#evaluasi" title="Link to this heading">#</a></h1>
+<section id="tahap-4-evaluasi-model">
+<h1>📈 Tahap 4: Evaluasi Model<a class="headerlink" href="#tahap-4-evaluasi-model" title="Link to this heading">#</a></h1>
+<p>Setelah model dibuat dan prediksi dilakukan, langkah berikutnya adalah mengevaluasi performa model menggunakan berbagai metrik evaluasi.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
@@ -1073,13 +1093,63 @@ weighted avg       0.74      0.77      0.75        84
 </div>
 </div>
 </section>
-<section id="kesimpulan">
-<h1>kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h1>
+<section id="kesimpulan-akhir">
+<h1>🏁 Kesimpulan Akhir<a class="headerlink" href="#kesimpulan-akhir" title="Link to this heading">#</a></h1>
 <p>Berdasarkan hasil evaluasi, model Random Forest Classifier yang dibangun dapat memprediksi kelangsungan hidup pasien sirosis dengan akurasi yang baik. Dengan preprocessing yang tepat dan pemilihan model yang sesuai, sistem ini dapat menjadi alat bantu dalam pengambilan keputusan medis.</p>
 <p>Hasil Model:
 Akurasi tinggi menandakan efektivitas model.</p>
 <p>Confusion Matrix dan Classification Report menunjukkan keseimbangan prediksi untuk kedua kelas (hidup/meninggal).</p>
 <p>Dengan tahapan yang lengkap — mulai dari pemahaman data, preprocessing, pemodelan, hingga evaluasi — model ini terbukti dapat diandalkan dalam tugas prediksi ini.</p>
+<p>berikut detail untuk setiap prosesnya:</p>
+<p>Pada proyek ini, kita telah berhasil membangun sebuah model klasifikasi untuk memprediksi kelangsungan hidup pasien sirosis berdasarkan dataset dari UCI Machine Learning Repository.</p>
+<p>Berikut tahapan yang telah dilakukan:</p>
+<section id="pemahaman-data-data-understanding">
+<h2>✨ 1. Pemahaman Data (Data Understanding)<a class="headerlink" href="#pemahaman-data-data-understanding" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Memahami struktur dataset dan tipe datanya.</p></li>
+<li><p>Mengecek dimensi data, jenis fitur, serta mendeteksi missing value.</p></li>
+</ul>
+</section>
+<section id="pemrosesan-awal-preprocessing">
+<h2>🛠️ 2. Pemrosesan Awal (Preprocessing)<a class="headerlink" href="#pemrosesan-awal-preprocessing" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Menghapus kolom ID yang tidak berguna untuk prediksi.</p></li>
+<li><p>Mengidentifikasi fitur kategorikal.</p></li>
+<li><p>Menangani missing value dengan mengisi menggunakan median untuk fitur numerik.</p></li>
+<li><p>Melakukan encoding pada fitur kategorikal agar dapat digunakan oleh algoritma machine learning.</p></li>
+</ul>
+</section>
+<section id="pemodelan-modeling">
+<h2>🤖 3. Pemodelan (Modeling)<a class="headerlink" href="#pemodelan-modeling" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Memisahkan data menjadi fitur (X) dan target (y).</p></li>
+<li><p>Membagi data menjadi data latih dan data uji.</p></li>
+<li><p>Membangun model klasifikasi menggunakan <strong>Random Forest Classifier</strong>.</p></li>
+<li><p>Melatih model dengan data training dan melakukan prediksi terhadap data testing.</p></li>
+</ul>
+</section>
+<section id="evaluasi-model">
+<h2>📈 4. Evaluasi Model<a class="headerlink" href="#evaluasi-model" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Menghitung akurasi model untuk menilai performa umum.</p></li>
+<li><p>Menganalisis hasil prediksi menggunakan confusion matrix.</p></li>
+<li><p>Melihat detail performa model dengan classification report (precision, recall, f1-score).</p></li>
+</ul>
+</section>
+<section id="hasil-akhir">
+<h2>🎯 Hasil Akhir<a class="headerlink" href="#hasil-akhir" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Model Random Forest yang dibangun menunjukkan performa yang baik dalam memprediksi status pasien sirosis.</p></li>
+<li><p>Dengan evaluasi metrik seperti akurasi dan f1-score, kita dapat menyimpulkan bahwa model ini cukup andal untuk digunakan pada dataset tersebut.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+</section>
+<section id="penutup">
+<h1>📚 Penutup<a class="headerlink" href="#penutup" title="Link to this heading">#</a></h1>
+<p>Proyek ini menunjukkan pentingnya tahapan preprocessing data sebelum membangun model, serta pentingnya evaluasi mendalam untuk memahami performa model secara menyeluruh.</p>
+<p>Tahapan-tahapan ini dapat dijadikan acuan standar dalam membangun proyek machine learning lain di masa depan.</p>
+<p><strong>Terima kasih! 🙏</strong></p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1138,12 +1208,23 @@ Akurasi tinggi menandakan efektivitas model.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">analisa</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing">preprocessing</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan">pemodelan</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi">evaluasi</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">🔍 Tahap 1: Pemahaman Data (Data Understanding)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-preprocessing-data">🛠️ Tahap 2: Preprocessing Data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-lanjutan-preprocessing-data-menangani-missing-value-dan-encoding">🛠️ Tahap 2 Lanjutan: Preprocessing Data (Menangani Missing Value dan Encoding)</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-pemodelan-modeling">🤖 Tahap 3: Pemodelan (Modeling)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-evaluasi-model">📈 Tahap 4: Evaluasi Model</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-10-fitur-paling-penting">Plot 10 fitur paling penting</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">kesimpulan</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-akhir">🏁 Kesimpulan Akhir</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemahaman-data-data-understanding">✨ 1. Pemahaman Data (Data Understanding)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemrosesan-awal-preprocessing">🛠️ 2. Pemrosesan Awal (Preprocessing)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-modeling">🤖 3. Pemodelan (Modeling)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-model">📈 4. Evaluasi Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-akhir">🎯 Hasil Akhir</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#penutup">📚 Penutup</a></li>
 </ul>
 
   </nav></div>
