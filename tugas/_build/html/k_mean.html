@@ -1,0 +1,1051 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>📊 K-Means Clustering pada Dataset Iris &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'k_mean';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="🔍 Tahap 1: Pemahaman Data (Data Understanding)" href="Uts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logosaya.jpg" class="logo__image only-light" alt="My sample book - Home"/>
+    <img src="_static/logosaya.jpg" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    intro
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="myintro.html">my introdoction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pendat1.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LOF.html">LOF (Local Outlier Factor)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="naive_byass.html">Naive Baiyes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uts.html">🔍 Tahap 1: Pemahaman Data (Data Understanding)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">📊 K-Means Clustering pada Dataset Iris</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fk_mean.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/k_mean.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>📊 K-Means Clustering pada Dataset Iris</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-means-clustering">Apa Itu K-Means Clustering?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-k-means">Cara Kerja K-Means:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alasan-memilih-24-klaster">Alasan Memilih 2–4 Klaster</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-silhouette-score">Apa Itu Silhouette Score?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi">Interpretasi:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-sse-sum-of-squared-errors">Apa Itu SSE (Sum of Squared Errors)?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">Tujuan:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-evaluasi">Tujuan Evaluasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-k-means-clustering">📈 Analisis Hasil K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#k-3-adalah-pilihan-terbaik">k = 3 Adalah Pilihan Terbaik?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-clustering-pada-dataset-iris">
+<h1>📊 K-Means Clustering pada Dataset Iris<a class="headerlink" href="#k-means-clustering-pada-dataset-iris" title="Link to this heading">#</a></h1>
+<section id="apa-itu-k-means-clustering">
+<h2>Apa Itu K-Means Clustering?<a class="headerlink" href="#apa-itu-k-means-clustering" title="Link to this heading">#</a></h2>
+<p><strong>K-Means Clustering</strong> adalah algoritma unsupervised learning yang digunakan untuk membagi data ke dalam beberapa kelompok (klaster) berdasarkan kemiripan fitur. Tujuan utama dari K-Means adalah mempartisi data menjadi <em>k</em> klaster sedemikian rupa sehingga setiap data berada pada klaster dengan centroid (titik pusat) terdekat.</p>
+<section id="cara-kerja-k-means">
+<h3>Cara Kerja K-Means:<a class="headerlink" href="#cara-kerja-k-means" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Tentukan jumlah klaster (<em>k</em>).</p></li>
+<li><p>Inisialisasi centroid secara acak.</p></li>
+<li><p>Tetapkan setiap data ke centroid terdekat.</p></li>
+<li><p>Hitung ulang posisi centroid berdasarkan rata-rata anggota klaster.</p></li>
+<li><p>Ulangi langkah 3–4 hingga centroid tidak berubah signifikan (konvergen).</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="alasan-memilih-24-klaster">
+<h2>Alasan Memilih 2–4 Klaster<a class="headerlink" href="#alasan-memilih-24-klaster" title="Link to this heading">#</a></h2>
+<p>Pada eksperimen ini, dilakukan percobaan dengan jumlah klaster sebanyak <strong>2, 3, dan 4</strong> untuk menemukan jumlah klaster terbaik berdasarkan evaluasi kuantitatif. Alasan pemilihan jumlah klaster ini:</p>
+<ul class="simple">
+<li><p>Dataset Iris secara alami memiliki <strong>3 kelas</strong> (Setosa, Versicolor, Virginica), namun kita <strong>menghapus label kelas</strong>, sehingga kita tidak tahu jumlah klaster sebenarnya.</p></li>
+<li><p>Dengan mencoba nilai k = 2 hingga 4, kita dapat melihat bagaimana model membentuk klaster tanpa pengetahuan label, dan mengevaluasi hasilnya menggunakan <strong>metrik evaluasi</strong> seperti <strong>Silhouette Score</strong> dan <strong>SSE</strong>.</p></li>
+<li><p>Jika tidak ada informasi label, pendekatan umum adalah mencoba beberapa nilai <em>k</em> dan memilih nilai terbaik berdasarkan metrik evaluasi.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="apa-itu-silhouette-score">
+<h2>Apa Itu Silhouette Score?<a class="headerlink" href="#apa-itu-silhouette-score" title="Link to this heading">#</a></h2>
+<p><strong>Silhouette Score</strong> adalah metrik yang digunakan untuk mengukur kualitas klastering.</p>
+<section id="interpretasi">
+<h3>Interpretasi:<a class="headerlink" href="#interpretasi" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Mendekati 1</strong> → data sangat cocok dengan klasternya.</p></li>
+<li><p><strong>Mendekati 0</strong> → data berada di batas antara dua klaster.</p></li>
+<li><p><strong>Negatif</strong> → data mungkin salah penempatan klaster.</p></li>
+</ul>
+</section>
+<section id="rumus">
+<h3>Rumus:<a class="headerlink" href="#rumus" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+s = \frac{b - a}{\max(a, b)}
+\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p>( a ) = rata-rata jarak data ke semua titik dalam klasternya (intra-cluster distance)</p></li>
+<li><p>( b ) = rata-rata jarak data ke titik dalam klaster terdekat lain (nearest-cluster distance)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="apa-itu-sse-sum-of-squared-errors">
+<h2>Apa Itu SSE (Sum of Squared Errors)?<a class="headerlink" href="#apa-itu-sse-sum-of-squared-errors" title="Link to this heading">#</a></h2>
+<p><strong>SSE</strong> atau <strong>inertia</strong> adalah total jarak kuadrat dari masing-masing data ke centroid klasternya.</p>
+<section id="tujuan">
+<h3>Tujuan:<a class="headerlink" href="#tujuan" title="Link to this heading">#</a></h3>
+<p>Menunjukkan seberapa rapat data dalam tiap klaster. Semakin kecil nilai SSE, semakin baik penyebaran klaster (tapi terlalu kecil juga bisa overfitting).</p>
+</section>
+<section id="id1">
+<h3>Rumus:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+SSE = \sum_{i=1}^{k} \sum_{x \in C_i} ||x - \mu_i||^2
+\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(( C_i \)\)</span> = klaster ke-i</p></li>
+<li><p><span class="math notranslate nohighlight">\(( \mu_i \)\)</span> = centroid klaster ke-i</p></li>
+<li><p><span class="math notranslate nohighlight">\(( ||x - \mu_i||^2 \)\)</span> = kuadrat jarak Euclidean antara titik ke centroid</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tujuan-evaluasi">
+<h2>Tujuan Evaluasi<a class="headerlink" href="#tujuan-evaluasi" title="Link to this heading">#</a></h2>
+<p>Dengan membandingkan <strong>Silhouette Score</strong> dan <strong>SSE</strong> untuk masing-masing nilai <em>k</em>, kita bisa menentukan:</p>
+<ul class="simple">
+<li><p>Jumlah klaster yang secara alami paling tepat untuk data tanpa label.</p></li>
+<li><p>Keseimbangan antara ketepatan klaster (silhouette tinggi) dan kepadatan klaster (SSE rendah).</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+<span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;google.colab&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Baca file CSV</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;iris-mysql.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan 5 baris awal</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-453ea8f5-4151-473e-9cae-2aa5285b2b10" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>Class</th>
+      <th>petal length</th>
+      <th>petal width</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Iris-setosa</td>
+      <td>1.4</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Iris-setosa</td>
+      <td>1.4</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Iris-setosa</td>
+      <td>1.3</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Iris-setosa</td>
+      <td>1.5</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Iris-setosa</td>
+      <td>1.4</td>
+      <td>0.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-453ea8f5-4151-473e-9cae-2aa5285b2b10')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-453ea8f5-4151-473e-9cae-2aa5285b2b10 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-453ea8f5-4151-473e-9cae-2aa5285b2b10');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-53b13d20-2040-4dea-b1a8-60a785510b09">
+      <button class="colab-df-quickchart" onclick="quickchart('df-53b13d20-2040-4dea-b1a8-60a785510b09')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-53b13d20-2040-4dea-b1a8-60a785510b09 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop kolom class</span>
+<span class="n">df_no_label</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Class&#39;</span><span class="p">])</span>  <span class="c1"># atau ganti dengan nama kolom yang sesuai</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sse</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">silhouette</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">K</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">K</span><span class="p">:</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_no_label</span><span class="p">)</span>
+
+    <span class="c1"># SSE (Sum of Squared Errors)</span>
+    <span class="n">sse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+    <span class="c1"># Silhouette Score</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">silhouette_score</span><span class="p">(</span><span class="n">df_no_label</span><span class="p">,</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+    <span class="n">silhouette</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+
+<span class="c1"># Tampilkan hasil</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> | SSE: </span><span class="si">{</span><span class="n">sse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | Silhouette Score: </span><span class="si">{</span><span class="n">silhouette</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cluster: 2 | SSE: 70527.29 | Silhouette Score: 0.6210
+Cluster: 3 | SSE: 31307.72 | Silhouette Score: 0.5824
+Cluster: 4 | SSE: 17748.15 | Silhouette Score: 0.5580
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">sse</span><span class="p">,</span> <span class="s1">&#39;bo-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Jumlah Cluster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;SSE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;SSE vs Jumlah Cluster&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">silhouette</span><span class="p">,</span> <span class="s1">&#39;go-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Jumlah Cluster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Silhouette Score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Silhouette Score vs Jumlah Cluster&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/dde6840d38318c1d4d997aa44a61af7e9f2fc825bfe924eab4035d320f78c784.png" src="_images/dde6840d38318c1d4d997aa44a61af7e9f2fc825bfe924eab4035d320f78c784.png" />
+</div>
+</div>
+</section>
+<section id="analisis-hasil-k-means-clustering">
+<h2>📈 Analisis Hasil K-Means Clustering<a class="headerlink" href="#analisis-hasil-k-means-clustering" title="Link to this heading">#</a></h2>
+<p>Berikut adalah hasil evaluasi untuk jumlah klaster dari 2 hingga 4:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jumlah Klaster (k)</p></th>
+<th class="head"><p>SSE</p></th>
+<th class="head"><p>Silhouette Score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>70527.29</p></td>
+<td><p><strong>0.6210</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>31307.72</p></td>
+<td><p>0.5824</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p><strong>17748.15</strong></p></td>
+<td><p>0.5580</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="k-3-adalah-pilihan-terbaik">
+<h3>k = 3 Adalah Pilihan Terbaik?<a class="headerlink" href="#k-3-adalah-pilihan-terbaik" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>SSE</strong> menurun drastis dari k=2 ke k=3 (dari ~70.5k ke ~31.3k), menunjukkan bahwa data menjadi jauh lebih rapat dan terkelompok lebih baik.</p></li>
+<li><p>Dari k=3 ke k=4, penurunan SSE masih ada (menjadi ~17.7k), <strong>tapi tidak sebesar sebelumnya</strong> — ini menunjukkan <strong>titik pelambatan penurunan SSE</strong> (<em>elbow point</em>), yang merupakan indikasi jumlah klaster yang ideal.</p></li>
+<li><p><strong>Silhouette Score</strong> tertinggi memang pada k=2, namun nilai ini bisa menyesatkan karena hanya ada 2 kelompok, dan Iris sebenarnya mengandung 3 jenis bunga. Skor 0.5824 pada k=3 masih cukup tinggi dan stabil.</p></li>
+<li><p>K=4 menghasilkan SSE yang rendah, tapi Silhouette Score terendah, yang berarti pemisahan antar klaster mulai tidak jelas (klaster saling tumpang tindih).</p></li>
+</ul>
+</section>
+<section id="kesimpulan">
+<h3>Kesimpulan:<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>K=3 memberikan keseimbangan terbaik antara <strong>kompaknya klaster (SSE rendah)</strong> dan <strong>pemisahan yang jelas (Silhouette Score memadai)</strong>.</p></li>
+<li><p>Ini sejalan dengan struktur alami dataset Iris yang memang memiliki <strong>3 spesies</strong> berbeda, meskipun label dihapus dalam analisis ini.</p></li>
+</ul>
+<p>Dengan demikian, <strong>k=3 adalah jumlah klaster terbaik</strong> untuk dataset Iris pada eksperimen K-Means ini.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Uts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🔍 Tahap 1: Pemahaman Data (Data Understanding)</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-means-clustering">Apa Itu K-Means Clustering?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-k-means">Cara Kerja K-Means:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alasan-memilih-24-klaster">Alasan Memilih 2–4 Klaster</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-silhouette-score">Apa Itu Silhouette Score?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi">Interpretasi:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-sse-sum-of-squared-errors">Apa Itu SSE (Sum of Squared Errors)?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">Tujuan:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-evaluasi">Tujuan Evaluasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-k-means-clustering">📈 Analisis Hasil K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#k-3-adalah-pilihan-terbaik">k = 3 Adalah Pilihan Terbaik?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dicky Saputra calon data analyst
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
