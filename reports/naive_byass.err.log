@@ -1,78 +1,44 @@
 Traceback (most recent call last):
-  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 782, in _async_poll_for_reply
+    msg = await ensure_async(self.kc.shell_channel.get_msg(timeout=new_timeout))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nabil\AppData\Roaming\Python\Python312\site-packages\jupyter_core\utils\__init__.py", line 198, in ensure_async
+    result = await obj
+             ^^^^^^^^^
+  File "C:\Users\nabil\AppData\Roaming\Python\Python312\site-packages\jupyter_client\channels.py", line 315, in get_msg
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
     executenb(
-  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 1319, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/codespace/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+  File "C:\Users\nabil\AppData\Roaming\Python\Python312\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
     return loop.run_until_complete(inner)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
     return future.result()
            ^^^^^^^^^^^^^^^
-  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 709, in async_execute
     await self.async_execute_cell(
-  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
-    await self._check_raise_for_error(cell, cell_index, exec_reply)
-  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
-    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
-nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
-------------------
-# Koneksi ke MySQL
-mysql_engine = create_engine("mysql+pymysql://avnadmin:AVNS_6Z7yDEzrrMmRqOX1L1N@mysql-37408e5b-irishmysql.h.aivencloud.com:11680/defaultdb")
-
-# Mengambil data dari database
-query = "SELECT * FROM iris_mysql;"
-df = pd.read_sql(query, mysql_engine)
-
-df.columns = ["id", "class", "petal_length", "petal_width"]
-
-# Data input
-input_petal_length = 4.7
-input_petal_width = 1.8
-
-# Menghitung probabilitas prior
-class_counts = df["class"].value_counts()
-total_samples = len(df)
-prior_probs = class_counts / total_samples
-
-# Menghitung mean dan standar deviasi untuk setiap kelas
-stats = df.groupby("class").agg({
-    "petal_length": ["mean", "std"],
-    "petal_width": ["mean", "std"]
-})
-stats.columns = ["petal_length_mean", "petal_length_std", "petal_width_mean", "petal_width_std"]
-
-# Menghitung probabilitas likelihood menggunakan distribusi Gaussian
-def gaussian_prob(x, mean, std):
-    return norm.pdf(x, mean, std)
-
-likelihoods = {}
-for species in stats.index:
-    p_length = gaussian_prob(input_petal_length, stats.loc[species, "petal_length_mean"], stats.loc[species, "petal_length_std"])
-    p_width = gaussian_prob(input_petal_width, stats.loc[species, "petal_width_mean"], stats.loc[species, "petal_width_std"])
-    likelihoods[species] = prior_probs[species] * p_length * p_width
-
-# Menentukan kelas dengan probabilitas tertinggi
-predicted_species = max(likelihoods, key=likelihoods.get)
-
-print(f"Data ({input_petal_length}, {input_petal_width}) diklasifikasikan sebagai: {predicted_species}")
-
-------------------
-
-
-[0;31m---------------------------------------------------------------------------[0m
-[0;31mNameError[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[2], line 32[0m
-[1;32m     30[0m likelihoods [38;5;241m=[39m {}
-[1;32m     31[0m [38;5;28;01mfor[39;00m species [38;5;129;01min[39;00m stats[38;5;241m.[39mindex:
-[0;32m---> 32[0m     p_length [38;5;241m=[39m [43mgaussian_prob[49m[43m([49m[43minput_petal_length[49m[43m,[49m[43m [49m[43mstats[49m[38;5;241;43m.[39;49m[43mloc[49m[43m[[49m[43mspecies[49m[43m,[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43mpetal_length_mean[39;49m[38;5;124;43m"[39;49m[43m][49m[43m,[49m[43m [49m[43mstats[49m[38;5;241;43m.[39;49m[43mloc[49m[43m[[49m[43mspecies[49m[43m,[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43mpetal_length_std[39;49m[38;5;124;43m"[39;49m[43m][49m[43m)[49m
-[1;32m     33[0m     p_width [38;5;241m=[39m gaussian_prob(input_petal_width, stats[38;5;241m.[39mloc[species, [38;5;124m"[39m[38;5;124mpetal_width_mean[39m[38;5;124m"[39m], stats[38;5;241m.[39mloc[species, [38;5;124m"[39m[38;5;124mpetal_width_std[39m[38;5;124m"[39m])
-[1;32m     34[0m     likelihoods[species] [38;5;241m=[39m prior_probs[species] [38;5;241m*[39m p_length [38;5;241m*[39m p_width
-
-Cell [0;32mIn[2], line 28[0m, in [0;36mgaussian_prob[0;34m(x, mean, std)[0m
-[1;32m     27[0m [38;5;28;01mdef[39;00m [38;5;21mgaussian_prob[39m(x, mean, std):
-[0;32m---> 28[0m     [38;5;28;01mreturn[39;00m [43mnorm[49m[38;5;241m.[39mpdf(x, mean, std)
-
-[0;31mNameError[0m: name 'norm' is not defined
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 1005, in async_execute_cell
+    exec_reply = await self.task_poll_for_reply
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 806, in _async_poll_for_reply
+    error_on_timeout_execute_reply = await self._async_handle_timeout(timeout, cell)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nabil\AppData\Local\Programs\Python\Python312\Lib\site-packages\nbclient\client.py", line 856, in _async_handle_timeout
+    raise CellTimeoutError.error_from_timeout_and_cell(
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 30 seconds.
+The message was: Cell execution timed out.
+Here is a preview of the cell contents:
+-------------------
+['!pip install pymysql psycopg2 sqlalchemy pandas', '!pip install pyod', '', 'import pandas as pd', 'import numpy as np']
+...
+['from sklearn.preprocessing import StandardScaler', 'from pyod.models.knn import KNN', 'from pyod.models.iforest import IForest  # Isolation Forest', 'from pyod.models.lof import LOF  # Local Outlier Factor', 'from sqlalchemy import create_engine']
+-------------------
 
