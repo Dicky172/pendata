@@ -1,0 +1,1061 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>📊 K-Means Clustering pada Dataset Iris &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'k_mean';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="🔍 Tahap 1: Pemahaman Data (Data Understanding)" href="Uts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logosaya.jpg" class="logo__image only-light" alt="My sample book - Home"/>
+    <img src="_static/logosaya.jpg" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    intro
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="myintro.html">my introdoction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pendat1.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LOF.html">LOF (Local Outlier Factor)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="naive_byass.html">Naive Baiyes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uts.html">🔍 Tahap 1: Pemahaman Data (Data Understanding)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">📊 K-Means Clustering pada Dataset Iris</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fk_mean.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/k_mean.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>📊 K-Means Clustering pada Dataset Iris</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-means-clustering">Apa Itu K-Means Clustering?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-k-means">Cara Kerja K-Means:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alasan-memilih-24-klaster">Alasan Memilih 2–4 Klaster</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-silhouette-score">Apa Itu Silhouette Score?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi">Interpretasi:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-sse-sum-of-squared-errors">Apa Itu SSE (Sum of Squared Errors)?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">Tujuan:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-evaluasi">Tujuan Evaluasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-k-means-clustering">📈 Analisis Hasil K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#k-3-adalah-pilihan-terbaik">k = 3 Adalah Pilihan Terbaik?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fuzzy-clustering">Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-dasar">Konsep Dasar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-paling-populer-fuzzy-c-means-fcm">Algoritma Paling Populer: Fuzzy C-Means (FCM)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kelebihan-fuzzy-clustering">Kelebihan Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kekurangan-fuzzy-clustering">Kekurangan Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-penggunaan">Contoh Penggunaan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi">Normalisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering">Clustering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-cluster">Evaluasi Cluster</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-clustering-pada-dataset-iris">
+<h1>📊 K-Means Clustering pada Dataset Iris<a class="headerlink" href="#k-means-clustering-pada-dataset-iris" title="Link to this heading">#</a></h1>
+<section id="apa-itu-k-means-clustering">
+<h2>Apa Itu K-Means Clustering?<a class="headerlink" href="#apa-itu-k-means-clustering" title="Link to this heading">#</a></h2>
+<p><strong>K-Means Clustering</strong> adalah algoritma unsupervised learning yang digunakan untuk membagi data ke dalam beberapa kelompok (klaster) berdasarkan kemiripan fitur. Tujuan utama dari K-Means adalah mempartisi data menjadi <em>k</em> klaster sedemikian rupa sehingga setiap data berada pada klaster dengan centroid (titik pusat) terdekat.</p>
+<section id="cara-kerja-k-means">
+<h3>Cara Kerja K-Means:<a class="headerlink" href="#cara-kerja-k-means" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Tentukan jumlah klaster (<em>k</em>).</p></li>
+<li><p>Inisialisasi centroid secara acak.</p></li>
+<li><p>Tetapkan setiap data ke centroid terdekat.</p></li>
+<li><p>Hitung ulang posisi centroid berdasarkan rata-rata anggota klaster.</p></li>
+<li><p>Ulangi langkah 3–4 hingga centroid tidak berubah signifikan (konvergen).</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="alasan-memilih-24-klaster">
+<h2>Alasan Memilih 2–4 Klaster<a class="headerlink" href="#alasan-memilih-24-klaster" title="Link to this heading">#</a></h2>
+<p>Pada eksperimen ini, dilakukan percobaan dengan jumlah klaster sebanyak <strong>2, 3, dan 4</strong> untuk menemukan jumlah klaster terbaik berdasarkan evaluasi kuantitatif. Alasan pemilihan jumlah klaster ini:</p>
+<ul class="simple">
+<li><p>Dataset Iris secara alami memiliki <strong>3 kelas</strong> (Setosa, Versicolor, Virginica), namun kita <strong>menghapus label kelas</strong>, sehingga kita tidak tahu jumlah klaster sebenarnya.</p></li>
+<li><p>Dengan mencoba nilai k = 2 hingga 4, kita dapat melihat bagaimana model membentuk klaster tanpa pengetahuan label, dan mengevaluasi hasilnya menggunakan <strong>metrik evaluasi</strong> seperti <strong>Silhouette Score</strong> dan <strong>SSE</strong>.</p></li>
+<li><p>Jika tidak ada informasi label, pendekatan umum adalah mencoba beberapa nilai <em>k</em> dan memilih nilai terbaik berdasarkan metrik evaluasi.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="apa-itu-silhouette-score">
+<h2>Apa Itu Silhouette Score?<a class="headerlink" href="#apa-itu-silhouette-score" title="Link to this heading">#</a></h2>
+<p><strong>Silhouette Score</strong> adalah metrik yang digunakan untuk mengukur kualitas klastering.</p>
+<section id="interpretasi">
+<h3>Interpretasi:<a class="headerlink" href="#interpretasi" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Mendekati 1</strong> → data sangat cocok dengan klasternya.</p></li>
+<li><p><strong>Mendekati 0</strong> → data berada di batas antara dua klaster.</p></li>
+<li><p><strong>Negatif</strong> → data mungkin salah penempatan klaster.</p></li>
+</ul>
+</section>
+<section id="rumus">
+<h3>Rumus:<a class="headerlink" href="#rumus" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+s = \frac{b - a}{\max(a, b)}
+\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p>( a ) = rata-rata jarak data ke semua titik dalam klasternya (intra-cluster distance)</p></li>
+<li><p>( b ) = rata-rata jarak data ke titik dalam klaster terdekat lain (nearest-cluster distance)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="apa-itu-sse-sum-of-squared-errors">
+<h2>Apa Itu SSE (Sum of Squared Errors)?<a class="headerlink" href="#apa-itu-sse-sum-of-squared-errors" title="Link to this heading">#</a></h2>
+<p><strong>SSE</strong> atau <strong>inertia</strong> adalah total jarak kuadrat dari masing-masing data ke centroid klasternya.</p>
+<section id="tujuan">
+<h3>Tujuan:<a class="headerlink" href="#tujuan" title="Link to this heading">#</a></h3>
+<p>Menunjukkan seberapa rapat data dalam tiap klaster. Semakin kecil nilai SSE, semakin baik penyebaran klaster (tapi terlalu kecil juga bisa overfitting).</p>
+</section>
+<section id="id1">
+<h3>Rumus:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+SSE = \sum_{i=1}^{k} \sum_{x \in C_i} ||x - \mu_i||^2
+\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(( C_i \)\)</span> = klaster ke-i</p></li>
+<li><p><span class="math notranslate nohighlight">\(( \mu_i \)\)</span> = centroid klaster ke-i</p></li>
+<li><p><span class="math notranslate nohighlight">\(( ||x - \mu_i||^2 \)\)</span> = kuadrat jarak Euclidean antara titik ke centroid</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tujuan-evaluasi">
+<h2>Tujuan Evaluasi<a class="headerlink" href="#tujuan-evaluasi" title="Link to this heading">#</a></h2>
+<p>Dengan membandingkan <strong>Silhouette Score</strong> dan <strong>SSE</strong> untuk masing-masing nilai <em>k</em>, kita bisa menentukan:</p>
+<ul class="simple">
+<li><p>Jumlah klaster yang secara alami paling tepat untuk data tanpa label.</p></li>
+<li><p>Keseimbangan antara ketepatan klaster (silhouette tinggi) dan kepadatan klaster (SSE rendah).</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+
+<span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>  <span class="c1"># Upload file .csv kamu</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">uploaded</span><span class="p">)))</span>  <span class="c1"># Membaca file yang diupload</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">uploaded</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">upload</span><span class="p">()</span>  <span class="c1"># Upload file .csv kamu</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">uploaded</span><span class="p">)))</span>  <span class="c1"># Membaca file yang diupload</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;google.colab&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;Class&#39;</span><span class="p">])</span>  <span class="c1"># hanya fitur numerik yang tersisa</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">data_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">sse</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">silhouette_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>  <span class="c1"># untuk k = 2 sampai 4</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>
+    <span class="n">sse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>  <span class="c1"># SSE (jumlah kuadrat jarak ke pusat klaster)</span>
+    <span class="n">silhouette_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">silhouette_score</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">,</span> <span class="n">labels</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># SSE</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sse</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;SSE vs Jumlah Klaster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Jumlah Klaster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;SSE&#39;</span><span class="p">)</span>
+
+<span class="c1"># Silhouette Score</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">silhouette_scores</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Silhouette Score vs Jumlah Klaster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Jumlah Klaster (k)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Silhouette Score&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/8f07f0fe5d2c7c2ff975263845311e0a85f893bdc97f53bb64a80be015ae6ee5.png" src="_images/8f07f0fe5d2c7c2ff975263845311e0a85f893bdc97f53bb64a80be015ae6ee5.png" />
+</div>
+</div>
+</section>
+<section id="analisis-hasil-k-means-clustering">
+<h2>📈 Analisis Hasil K-Means Clustering<a class="headerlink" href="#analisis-hasil-k-means-clustering" title="Link to this heading">#</a></h2>
+<p>Berikut adalah hasil evaluasi untuk jumlah klaster dari 2 hingga 4:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jumlah Klaster (k)</p></th>
+<th class="head"><p>SSE</p></th>
+<th class="head"><p>Silhouette Score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>70527.29</p></td>
+<td><p><strong>0.6210</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>31307.72</p></td>
+<td><p>0.5824</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p><strong>17748.15</strong></p></td>
+<td><p>0.5580</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="k-3-adalah-pilihan-terbaik">
+<h3>k = 3 Adalah Pilihan Terbaik?<a class="headerlink" href="#k-3-adalah-pilihan-terbaik" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>SSE</strong> menurun drastis dari k=2 ke k=3 (dari ~70.5k ke ~31.3k), menunjukkan bahwa data menjadi jauh lebih rapat dan terkelompok lebih baik.</p></li>
+<li><p>Dari k=3 ke k=4, penurunan SSE masih ada (menjadi ~17.7k), <strong>tapi tidak sebesar sebelumnya</strong> — ini menunjukkan <strong>titik pelambatan penurunan SSE</strong> (<em>elbow point</em>), yang merupakan indikasi jumlah klaster yang ideal.</p></li>
+<li><p><strong>Silhouette Score</strong> tertinggi memang pada k=2, namun nilai ini bisa menyesatkan karena hanya ada 2 kelompok, dan Iris sebenarnya mengandung 3 jenis bunga. Skor 0.5824 pada k=3 masih cukup tinggi dan stabil.</p></li>
+<li><p>K=4 menghasilkan SSE yang rendah, tapi Silhouette Score terendah, yang berarti pemisahan antar klaster mulai tidak jelas (klaster saling tumpang tindih).</p></li>
+</ul>
+</section>
+<section id="kesimpulan">
+<h3>Kesimpulan:<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>K=3 memberikan keseimbangan terbaik antara <strong>kompaknya klaster (SSE rendah)</strong> dan <strong>pemisahan yang jelas (Silhouette Score memadai)</strong>.</p></li>
+<li><p>Ini sejalan dengan struktur alami dataset Iris yang memang memiliki <strong>3 spesies</strong> berbeda, meskipun label dihapus dalam analisis ini.</p></li>
+</ul>
+<p>Dengan demikian, <strong>k=3 adalah jumlah klaster terbaik</strong> untuk dataset Iris pada eksperimen K-Means ini.</p>
+</section>
+</section>
+<section id="fuzzy-clustering">
+<h2>Fuzzy Clustering<a class="headerlink" href="#fuzzy-clustering" title="Link to this heading">#</a></h2>
+<p><strong>Fuzzy Clustering</strong> adalah metode pengelompokan data di mana setiap data dapat memiliki derajat keanggotaan pada lebih dari satu cluster. Berbeda dengan clustering keras (hard clustering) seperti K-Means yang hanya mengelompokkan data secara eksklusif ke satu cluster saja, fuzzy clustering memungkinkan data berada di beberapa cluster dengan tingkat keanggotaan yang berbeda-beda.</p>
+</section>
+<section id="konsep-dasar">
+<h2>Konsep Dasar<a class="headerlink" href="#konsep-dasar" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Pada fuzzy clustering, setiap objek data memiliki nilai keanggotaan (membership degree) antara 0 sampai 1 untuk setiap cluster.</p></li>
+<li><p>Total nilai keanggotaan sebuah objek terhadap semua cluster adalah 1.</p></li>
+<li><p>Nilai keanggotaan ini menunjukkan seberapa kuat hubungan sebuah data dengan masing-masing cluster.</p></li>
+</ul>
+</section>
+<section id="algoritma-paling-populer-fuzzy-c-means-fcm">
+<h2>Algoritma Paling Populer: Fuzzy C-Means (FCM)<a class="headerlink" href="#algoritma-paling-populer-fuzzy-c-means-fcm" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>FCM adalah algoritma fuzzy clustering yang paling umum digunakan.</p></li>
+<li><p>Algoritma ini mengiterasi dua langkah utama:</p>
+<ol class="arabic simple">
+<li><p>Menghitung pusat cluster (centroid) berdasarkan bobot keanggotaan data.</p></li>
+<li><p>Memperbarui nilai keanggotaan setiap data berdasarkan jarak ke centroid cluster.</p></li>
+</ol>
+</li>
+<li><p>Proses ini diulang sampai konvergen atau mencapai batas iterasi maksimum.</p></li>
+</ul>
+</section>
+<section id="kelebihan-fuzzy-clustering">
+<h2>Kelebihan Fuzzy Clustering<a class="headerlink" href="#kelebihan-fuzzy-clustering" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Lebih fleksibel dibanding clustering keras karena dapat menangani data yang tidak jelas batas cluster-nya.</p></li>
+<li><p>Berguna untuk data dengan overlap antar cluster atau kondisi yang ambigu.</p></li>
+<li><p>Memberikan informasi tambahan berupa derajat keanggotaan yang dapat membantu analisis lebih dalam.</p></li>
+</ul>
+</section>
+<section id="kekurangan-fuzzy-clustering">
+<h2>Kekurangan Fuzzy Clustering<a class="headerlink" href="#kekurangan-fuzzy-clustering" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Proses komputasi biasanya lebih berat dibanding clustering keras.</p></li>
+<li><p>Memerlukan parameter tambahan seperti nilai fuzziness (biasanya dilambangkan dengan m) yang perlu disesuaikan.</p></li>
+</ul>
+</section>
+<section id="contoh-penggunaan">
+<h2>Contoh Penggunaan<a class="headerlink" href="#contoh-penggunaan" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Segmentasi citra (image segmentation) yang objeknya tidak pasti batasnya.</p></li>
+<li><p>Analisis pasar dengan pelanggan yang bisa masuk ke beberapa segmen.</p></li>
+<li><p>Pengelompokan data medis yang memiliki gejala tumpang tindih.</p></li>
+</ul>
+<hr class="docutils" />
+<p>Fuzzy clustering sangat berguna ketika kita ingin memahami data yang tidak terpisah jelas antar kelompok dan ingin menangkap hubungan yang lebih kompleks antar data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>scikit-fuzzy
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>scikit-learn
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span> <span class="nn">skfuzzy</span> <span class="k">as</span> <span class="nn">fuzz</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting scikit-fuzzy
+  Downloading scikit_fuzzy-0.5.0-py2.py3-none-any.whl.metadata (2.6 kB)
+Downloading scikit_fuzzy-0.5.0-py2.py3-none-any.whl (920 kB)
+?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/920.8 kB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
+   ━━━━━━━━━━━━━━╸━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">337.9/920.8 kB</span> <span class=" -Color -Color-Red">10.8 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">920.8/920.8 kB</span> <span class=" -Color -Color-Red">14.2 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hInstalling collected packages: scikit-fuzzy
+Successfully installed scikit-fuzzy-0.5.0
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.11/dist-packages (1.6.1)
+Requirement already satisfied: numpy&gt;=1.19.5 in /usr/local/lib/python3.11/dist-packages (from scikit-learn) (2.0.2)
+Requirement already satisfied: scipy&gt;=1.6.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn) (1.15.3)
+Requirement already satisfied: joblib&gt;=1.2.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn) (1.5.0)
+Requirement already satisfied: threadpoolctl&gt;=3.1.0 in /usr/local/lib/python3.11/dist-packages (from scikit-learn) (3.6.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/content/iris-full.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;[;,]&#39;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   id        Class  petal length  petal width  Unnamed: 4  Unnamed: 5  \
+0   1  Iris-setosa           1.4          0.2         NaN         NaN   
+1   2  Iris-setosa           1.4          0.2         NaN         NaN   
+2   3  Iris-setosa           1.3          0.2         NaN         NaN   
+3   4  Iris-setosa           1.5          0.2         NaN         NaN   
+4   5  Iris-setosa           1.4          0.2         NaN         NaN   
+
+   sepal length  sepal width  
+0           5.1          3.5  
+1           4.9          3.0  
+2           4.7          3.2  
+3           4.6          3.1  
+4           5.0          3.6  
+Index([&#39;id&#39;, &#39;Class&#39;, &#39;petal length&#39;, &#39;petal width&#39;, &#39;Unnamed: 4&#39;,
+       &#39;Unnamed: 5&#39;, &#39;sepal length&#39;, &#39;sepal width&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unnamed: 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Unnamed: 2&#39;</span><span class="p">,</span><span class="s1">&#39;Unnamed: 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Unnamed: 5&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-86-f3a1f29a82b4&gt;</span> in <span class="ni">&lt;cell line: 0&gt;</span><span class="nt">()</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unnamed: 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Unnamed: 2&#39;</span><span class="p">,</span><span class="s1">&#39;Unnamed: 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Unnamed: 5&#39;</span><span class="p">])</span>
+
+<span class="nn">/usr/local/lib/python3.11/dist-packages/pandas/core/frame.py</span> in <span class="ni">drop</span><span class="nt">(self, labels, axis, index, columns, level, inplace, errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">5579</span>                 <span class="n">weight</span>  <span class="mf">1.0</span>     <span class="mf">0.8</span>
+<span class="g g-Whitespace">   </span><span class="mi">5580</span>         <span class="s2">&quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">5581</span><span class="s2">         return super().drop(</span>
+<span class="g g-Whitespace">   </span><span class="mi">5582</span><span class="s2">             labels=labels,</span>
+<span class="g g-Whitespace">   </span><span class="mi">5583</span><span class="s2">             axis=axis,</span>
+
+<span class="nn">/usr/local/lib/python3.11/dist-packages/pandas/core/generic.py</span> in <span class="ni">drop</span><span class="nt">(self, labels, axis, index, columns, level, inplace, errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4786</span><span class="s2">         for axis, labels in axes.items():</span>
+<span class="g g-Whitespace">   </span><span class="mi">4787</span><span class="s2">             if labels is not None:</span>
+<span class="ne">-&gt; </span><span class="mi">4788</span><span class="s2">                 obj = obj._drop_axis(labels, axis, level=level, errors=errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4789</span><span class="s2"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">4790</span><span class="s2">         if inplace:</span>
+
+<span class="nn">/usr/local/lib/python3.11/dist-packages/pandas/core/generic.py</span> in <span class="ni">_drop_axis</span><span class="nt">(self, labels, axis, level, errors, only_slice)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4828</span><span class="s2">                 new_axis = axis.drop(labels, level=level, errors=errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4829</span><span class="s2">             else:</span>
+<span class="ne">-&gt; </span><span class="mi">4830</span><span class="s2">                 new_axis = axis.drop(labels, errors=errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4831</span><span class="s2">             indexer = axis.get_indexer(new_axis)</span>
+<span class="g g-Whitespace">   </span><span class="mi">4832</span><span class="s2"> </span>
+
+<span class="nn">/usr/local/lib/python3.11/dist-packages/pandas/core/indexes/base.py</span> in <span class="ni">drop</span><span class="nt">(self, labels, errors)</span>
+<span class="g g-Whitespace">   </span><span class="mi">7068</span><span class="s2">         if mask.any():</span>
+<span class="g g-Whitespace">   </span><span class="mi">7069</span><span class="s2">             if errors != &quot;ignore&quot;:</span>
+<span class="ne">-&gt; </span><span class="mi">7070</span><span class="s2">                 raise KeyError(f&quot;{labels[mask].tolist()} not found in axis&quot;)</span>
+<span class="g g-Whitespace">   </span><span class="mi">7071</span><span class="s2">             indexer = indexer[~mask]</span>
+<span class="g g-Whitespace">   </span><span class="mi">7072</span><span class="s2">         return self.delete(indexer)</span>
+
+<span class="ne">KeyError</span>: &quot;[&#39;Unnamed: 1&#39;, &#39;Unnamed: 2&#39;] not found in axis&quot;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;id&#39;, &#39;Class&#39;, &#39;petal length&#39;, &#39;petal width&#39;, &#39;Unnamed: 4&#39;,
+       &#39;Unnamed: 5&#39;, &#39;sepal length&#39;, &#39;sepal width&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Bersihkan nama kolom dari spasi atau karakter tak perlu</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="c1"># 2. Hapus kolom Unnamed yang tidak perlu</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unnamed: 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Unnamed: 5&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># 3. Coba drop kolom id dan Class</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;Class&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="normalisasi">
+<h3>Normalisasi<a class="headerlink" href="#normalisasi" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="clustering">
+<h3>Clustering<a class="headerlink" href="#clustering" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">clusters</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluasi-cluster">
+<h3>Evaluasi Cluster<a class="headerlink" href="#evaluasi-cluster" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
+
+<span class="n">score</span> <span class="o">=</span> <span class="n">silhouette_score</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">clusters</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Silhouette Score:&quot;</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Silhouette Score: 0.45450146630929983
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clusters</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   id        Class  petal length  petal width  sepal length  sepal width  \
+0   1  Iris-setosa           1.4          0.2           5.1          3.5   
+1   2  Iris-setosa           1.4          0.2           4.9          3.0   
+2   3  Iris-setosa           1.3          0.2           4.7          3.2   
+3   4  Iris-setosa           1.5          0.2           4.6          3.1   
+4   5  Iris-setosa           1.4          0.2           5.0          3.6   
+
+   cluster  
+0        2  
+1        2  
+2        2  
+3        2  
+4        2  
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualisasi">
+<h3>Visualisasi<a class="headerlink" href="#visualisasi" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Misal X_scaled sudah jadi hasil scaling dari fitur tanpa id dan class</span>
+<span class="c1"># clusters adalah hasil dari kmeans.fit_predict(X_scaled)</span>
+
+<span class="c1"># Kita pakai dua fitur asli untuk plot: sepal length dan sepal width</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sepal length&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;sepal width&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">clusters</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Visualisasi Clustering K-Means pada Iris Dataset&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Sepal Length&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Sepal Width&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cluster&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7091ed3ac217f30a086d97e2b890969906e9cbb2fd2ee3cb6a089aa0c1f4d11b.png" src="_images/7091ed3ac217f30a086d97e2b890969906e9cbb2fd2ee3cb6a089aa0c1f4d11b.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Uts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🔍 Tahap 1: Pemahaman Data (Data Understanding)</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-k-means-clustering">Apa Itu K-Means Clustering?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-k-means">Cara Kerja K-Means:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alasan-memilih-24-klaster">Alasan Memilih 2–4 Klaster</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-silhouette-score">Apa Itu Silhouette Score?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi">Interpretasi:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rumus">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-sse-sum-of-squared-errors">Apa Itu SSE (Sum of Squared Errors)?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan">Tujuan:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Rumus:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-evaluasi">Tujuan Evaluasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-k-means-clustering">📈 Analisis Hasil K-Means Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#k-3-adalah-pilihan-terbaik">k = 3 Adalah Pilihan Terbaik?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fuzzy-clustering">Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-dasar">Konsep Dasar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-paling-populer-fuzzy-c-means-fcm">Algoritma Paling Populer: Fuzzy C-Means (FCM)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kelebihan-fuzzy-clustering">Kelebihan Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kekurangan-fuzzy-clustering">Kekurangan Fuzzy Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-penggunaan">Contoh Penggunaan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi">Normalisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering">Clustering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-cluster">Evaluasi Cluster</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi">Visualisasi</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dicky Saputra calon data analyst
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
