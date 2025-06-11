@@ -10,3 +10,4 @@ chapters:
 - file: naive_byass
 - file: Uts
 - file: k_mean
+- file: decision_tree
