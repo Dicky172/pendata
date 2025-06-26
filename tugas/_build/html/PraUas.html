@@ -390,14 +390,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dan-pra-pemrosesan-data">📥 1. Load dan Pra-Pemrosesan Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-kolom-tidak-informatif">❌ 2. Menghapus Kolom Tidak Informatif</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-fitur-obat">💊 3. Encoding Fitur Obat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-target-variabel">🎯 4. Encoding Target Variabel</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifikasi-kolom-kategorikal">🔍 5. Identifikasi Kolom Kategorikal</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-encoding">🔁 6. One-Hot Encoding</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menangani-missing-values-tersisa">🧼 7. Menangani Missing Values Tersisa</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validasi-data-akhir">✅ 8. Validasi Data Akhir</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-dan-evaluasi">🧠 Pemodelan dan Evaluasi</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemisahan-fitur-dan-target">🧩 9. Pemisahan Fitur dan Target</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konversi-tipe-fitur">🔢 10. Konversi Tipe Fitur</a></li>
@@ -427,16 +419,13 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="langkah-langkah-preprocessing-dan-evaluasi-model-pada-dataset-diabetes">
 <h1>🧪 Langkah-langkah Preprocessing dan Evaluasi Model pada Dataset Diabetes<a class="headerlink" href="#langkah-langkah-preprocessing-dan-evaluasi-model-pada-dataset-diabetes" title="Link to this heading">#</a></h1>
 <hr class="docutils" />
-<section id="load-dan-pra-pemrosesan-data">
-<h2>📥 1. Load dan Pra-Pemrosesan Data<a class="headerlink" href="#load-dan-pra-pemrosesan-data" title="Link to this heading">#</a></h2>
+<p>📥 1. Load dan Pra-Pemrosesan Data</p>
 <ul class="simple">
 <li><p>Mengimpor dataset <code class="docutils literal notranslate"><span class="pre">diabetic_data.csv</span></code>.</p></li>
 <li><p>Mengganti nilai <code class="docutils literal notranslate"><span class="pre">'?'</span></code> menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code> untuk menangani missing values secara eksplisit.</p></li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="menghapus-kolom-tidak-informatif">
-<h2>❌ 2. Menghapus Kolom Tidak Informatif<a class="headerlink" href="#menghapus-kolom-tidak-informatif" title="Link to this heading">#</a></h2>
+<p>❌ 2. Menghapus Kolom Tidak Informatif</p>
 <ul class="simple">
 <li><p>Menghapus kolom dengan <strong>lebih dari 50%</strong> nilai yang hilang.</p></li>
 <li><p>Menghapus kolom yang dianggap tidak relevan atau bersifat identifier:</p>
@@ -445,10 +434,8 @@ document.write(`
 </ul>
 </li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="encoding-fitur-obat">
-<h2>💊 3. Encoding Fitur Obat<a class="headerlink" href="#encoding-fitur-obat" title="Link to this heading">#</a></h2>
+<p>💊 3. Encoding Fitur Obat</p>
 <ul class="simple">
 <li><p>Semua kolom terkait penggunaan obat dikodekan ke bentuk numerik:</p>
 <ul>
@@ -459,10 +446,8 @@ document.write(`
 </ul>
 </li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="encoding-target-variabel">
-<h2>🎯 4. Encoding Target Variabel<a class="headerlink" href="#encoding-target-variabel" title="Link to this heading">#</a></h2>
+<p>🎯 4. Encoding Target Variabel</p>
 <ul class="simple">
 <li><p>Kolom <code class="docutils literal notranslate"><span class="pre">readmitted</span></code> dikonversi menjadi biner:</p>
 <ul>
@@ -471,31 +456,23 @@ document.write(`
 </ul>
 </li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="identifikasi-kolom-kategorikal">
-<h2>🔍 5. Identifikasi Kolom Kategorikal<a class="headerlink" href="#identifikasi-kolom-kategorikal" title="Link to this heading">#</a></h2>
+<p>🔍 5. Identifikasi Kolom Kategorikal</p>
 <ul class="simple">
 <li><p>Menampilkan semua kolom bertipe <code class="docutils literal notranslate"><span class="pre">object</span></code> sebelum encoding lanjutan.</p></li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="one-hot-encoding">
-<h2>🔁 6. One-Hot Encoding<a class="headerlink" href="#one-hot-encoding" title="Link to this heading">#</a></h2>
+<p>🔁 6. One-Hot Encoding</p>
 <ul class="simple">
 <li><p>Mengubah semua kolom kategorikal menjadi kolom numerik menggunakan <strong>one-hot encoding</strong>.</p></li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="menangani-missing-values-tersisa">
-<h2>🧼 7. Menangani Missing Values Tersisa<a class="headerlink" href="#menangani-missing-values-tersisa" title="Link to this heading">#</a></h2>
+<p>🧼 7. Menangani Missing Values Tersisa</p>
 <ul class="simple">
 <li><p>Mengisi nilai hilang pada kolom numerik dengan <strong>median</strong> dari masing-masing kolom.</p></li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="validasi-data-akhir">
-<h2>✅ 8. Validasi Data Akhir<a class="headerlink" href="#validasi-data-akhir" title="Link to this heading">#</a></h2>
+<p>✅ 8. Validasi Data Akhir</p>
 <ul class="simple">
 <li><p>Mengecek:</p>
 <ul>
@@ -504,7 +481,6 @@ document.write(`
 </ul>
 </li>
 </ul>
-</section>
 <hr class="docutils" />
 <section id="pemodelan-dan-evaluasi">
 <h2>🧠 Pemodelan dan Evaluasi<a class="headerlink" href="#pemodelan-dan-evaluasi" title="Link to this heading">#</a></h2>
@@ -938,14 +914,6 @@ weighted avg       0.57      0.48      0.38     20354
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-dan-pra-pemrosesan-data">📥 1. Load dan Pra-Pemrosesan Data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menghapus-kolom-tidak-informatif">❌ 2. Menghapus Kolom Tidak Informatif</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-fitur-obat">💊 3. Encoding Fitur Obat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encoding-target-variabel">🎯 4. Encoding Target Variabel</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifikasi-kolom-kategorikal">🔍 5. Identifikasi Kolom Kategorikal</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-hot-encoding">🔁 6. One-Hot Encoding</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menangani-missing-values-tersisa">🧼 7. Menangani Missing Values Tersisa</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validasi-data-akhir">✅ 8. Validasi Data Akhir</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-dan-evaluasi">🧠 Pemodelan dan Evaluasi</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemisahan-fitur-dan-target">🧩 9. Pemisahan Fitur dan Target</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konversi-tipe-fitur">🔢 10. Konversi Tipe Fitur</a></li>
